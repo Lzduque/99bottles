@@ -3,23 +3,14 @@ class Bottles
         verses 99, 0
     end
 
-    def verse number
-        if number >= 2
-            str = <<-VERSE
-#{number} bottles of beer on the wall, #{number} bottles of beer.
-Take one down and pass it around, #{number - 1} bottle#{number - 1 == 1 ? "" : "s"} of beer on the wall.
-VERSE
-        elsif number == 1
-            str = <<-VERSE
-#{number} bottle of beer on the wall, #{number} bottle of beer.
-Take it down and pass it around, no more bottles of beer on the wall.
-VERSE
-        else
-            str = <<-VERSE
-No more bottles of beer on the wall, no more bottles of beer.
-Go to the store and buy some more, 99 bottles of beer on the wall.
-VERSE
-        end
+    def verse n
+        "#{n == 0 ? 'No more' : n} bottle#{'s' if n != 1}" +
+        " of beer on the wall, " +
+        "#{n == 0 ? 'no more' : n} bottle#{'s' if n != 1} of beer.\n" +
+        "#{n > 0 ? "Take #{n > 1 ? 'one' : 'it'} down and pass it around"
+                : "Go to the store and buy some more"}, " +
+        "#{n-1 < 0 ? 99 : n-1 == 0 ? 'no more' : n-1} bottle#{'s' if n-1 != 1}"+
+        " of beer on the wall.\n"        end
     end
 
     def verses hi, lo
