@@ -1,5 +1,4 @@
 class Bottles
- 
     def song
     verses(99, 0)
     end
@@ -8,49 +7,85 @@ class Bottles
         starting.downto(ending).map {|i| verse(i)}.join("\n")
     end
 
-    def container(number)
-        if number == 1
-            "bottle"
-        else
-            "bottles"
-        end
-    end
-
-    def pronoun(number)
-        if number == 1
-            "it"
-        else
-            "one"
-        end
-    end
-
-    def quantity(number)
-        if number == 0
-            "no more"
-        else
-            number.to_s
-        end
-    end
-
-    def action(number)
-        if number == 0
-            "Go to the store and buy some more"
-        else
-            "Take #{pronoun(number)} down and pass it around"
-        end
-    end
-
-    def successor(number)
-        if number == 0
-            99
-        else
-            number - 1
-        end
-    end
     def verse(number)
-        "#{quantity(number).capitalize} #{container(number)} of beer on the wall, " +
-        "#{quantity(number)} #{container(number)} of beer.\n" +
-        "#{action(number)}, " +
-        "#{quantity(successor(number))} #{container(successor(number))} of beer on the wall.\n"
+        bottle_number       = BottleNumber.for(number)
+
+        "#{bottle_number} ".capitalize + "of beer on the wall, " +
+        "#{bottle_number} of beer.\n" +
+        "#{bottle_number.action}, " +
+        "#{bottle_number.successor} of beer on the wall.\n"
+    end
+end
+
+class BottleNumber
+    attr_reader :number
+    def initialize(number)
+        @number = number
+    end
+
+    def self.for(number)
+        begin
+            const_get("BottleNumber#{number}")
+        rescue NameError
+            BottleNumber
+        end.new(number)
+    end
+
+    def container
+        "bottles"
+    end
+
+    def pronoun
+        "one"
+    end
+
+    def quantity
+        number.to_s
+    end
+
+    def action
+        "Take #{pronoun} down and pass it around"
+    end
+
+    def to_s
+        "#{quantity} #{container}"
+    end
+
+    def successor
+        BottleNumber.for(number - 1)
+    end
+end
+
+class BottleNumber0 < BottleNumber
+    def quantity
+        "no more"
+    end
+
+    def action
+        "Go to the store and buy some more"
+    end
+
+    def successor
+        BottleNumber.for(99)
+    end
+end
+
+class BottleNumber1 < BottleNumber
+    def container
+        "bottle"
+    end
+
+    def pronoun
+        "it"
+    end
+end
+
+class BottleNumber6 < BottleNumber
+    def quantity
+        "1"
+    end
+
+    def container
+        "six-pack"
     end
 end
